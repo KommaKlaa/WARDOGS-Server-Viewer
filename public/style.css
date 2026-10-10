@@ -226,6 +226,48 @@ a {
   gap: 10px;
 }
 
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.github-star-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 12px;
+  border: 1px solid rgba(196, 163, 90, 0.4);
+  background: rgba(0, 0, 0, 0.4);
+  color: var(--amber);
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.github-star-btn:hover {
+  border-color: var(--amber-hot);
+  color: var(--amber-hot);
+  background: rgba(196, 163, 90, 0.1);
+}
+
+.github-star-btn:focus-visible {
+  outline: 2px solid var(--amber-hot);
+  outline-offset: 2px;
+}
+
+.github-star-btn-footer {
+  margin-bottom: 4px;
+}
+
+.footer-actions {
+  margin: 0 0 10px;
+}
+
 .lang-switch {
   display: inline-flex;
   border: 1px solid var(--line);

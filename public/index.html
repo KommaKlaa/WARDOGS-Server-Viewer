@@ -31,9 +31,21 @@
       </div>
 
       <div class="header-right">
-        <div class="lang-switch" role="group" data-i18n-aria="language" aria-label="Language">
-          <button type="button" id="langDe" class="lang-btn" aria-pressed="false">DE</button>
-          <button type="button" id="langEn" class="lang-btn" aria-pressed="false">EN</button>
+        <div class="header-actions">
+          <a
+            id="githubStarBtn"
+            class="github-star-btn"
+            href="https://github.com/KommaKlaa/WARDOGS-Server-Viewer"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-i18n="githubStar"
+            data-i18n-aria="githubStarAria"
+            aria-label="Star on GitHub"
+          >Star on GitHub</a>
+          <div class="lang-switch" role="group" data-i18n-aria="language" aria-label="Language">
+            <button type="button" id="langDe" class="lang-btn" aria-pressed="false">DE</button>
+            <button type="button" id="langEn" class="lang-btn" aria-pressed="false">EN</button>
+          </div>
         </div>
 
         <div class="status-panel">
@@ -259,6 +271,15 @@
     </section>
 
     <footer class="footer">
+      <p class="footer-actions">
+        <a
+          class="github-star-btn github-star-btn-footer"
+          href="https://github.com/KommaKlaa/WARDOGS-Server-Viewer"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-i18n="githubStar"
+        >Star on GitHub</a>
+      </p>
       <p class="footer-legal" data-i18n="footerLocalSupport">
         Local community tool · Support via GitHub Issues
       </p>
