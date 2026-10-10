@@ -93,6 +93,7 @@
     mapFilter: document.getElementById("mapFilter"),
     serverType: document.getElementById("serverType"),
     rulesetFilter: document.getElementById("rulesetFilter"),
+    infantryOnlyToggle: document.getElementById("infantryOnlyToggle"),
     myLevel: document.getElementById("myLevel"),
     levelFilter: document.getElementById("levelFilter"),
     levelCapFilter: document.getElementById("levelCapFilter"),
@@ -402,12 +403,18 @@
     els.customLevelCapWrap.classList.toggle("hidden", !isCustom);
   }
 
+  function syncInfantryOnlyToggle() {
+    if (!els.infantryOnlyToggle || !els.rulesetFilter) return;
+    els.infantryOnlyToggle.checked = els.rulesetFilter.value === "infantry-only";
+  }
+
   function applySettings(settings) {
     els.myLevel.value = String(settings.myLevel ?? DEFAULT_MY_LEVEL);
     els.serverType.value = settings.serverType || "all";
     if (els.rulesetFilter) {
       els.rulesetFilter.value = settings.rulesetFilter || "all";
     }
+    syncInfantryOnlyToggle();
     els.hideFull.checked = Boolean(settings.hideFull);
     els.hideEmpty.checked = Boolean(settings.hideEmpty);
     els.levelFilter.value = settings.levelFilter || "all";
@@ -1525,6 +1532,21 @@
     els.levelCapFilter.addEventListener("change", () => {
       syncCustomCapVisibility();
     });
+
+    if (els.rulesetFilter) {
+      els.rulesetFilter.addEventListener("change", () => {
+        syncInfantryOnlyToggle();
+      });
+    }
+    if (els.infantryOnlyToggle && els.rulesetFilter) {
+      els.infantryOnlyToggle.addEventListener("change", () => {
+        els.rulesetFilter.value = els.infantryOnlyToggle.checked
+          ? "infantry-only"
+          : "all";
+        saveSettings();
+        refreshView();
+      });
+    }
 
     els.refreshBtn.addEventListener("click", () => loadServers());
     els.serverBody.addEventListener("click", onCopyClick);

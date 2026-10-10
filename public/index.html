@@ -169,21 +169,21 @@
         </label>
 
         <label class="field">
-          <span data-i18n="serverType">Server Type</span>
-          <select id="serverType">
-            <option value="all" data-i18n="allServers">All Servers</option>
-            <option value="official" data-i18n="official">Official</option>
-            <option value="community" data-i18n="community">Community</option>
-          </select>
-        </label>
-
-        <label class="field">
           <span data-i18n="ruleset">Ruleset</span>
           <select id="rulesetFilter">
             <option value="all" data-i18n="rulesetAll">All rulesets</option>
             <option value="standard" data-i18n="rulesetStandard">Standard</option>
             <option value="infantry-only" data-i18n="rulesetInfantryOnly">Infantry only</option>
             <option value="hardcore" data-i18n="rulesetHardcore">Hardcore</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span data-i18n="serverType">Server Type</span>
+          <select id="serverType">
+            <option value="all" data-i18n="allServers">All Servers</option>
+            <option value="official" data-i18n="official">Official</option>
+            <option value="community" data-i18n="community">Community</option>
           </select>
         </label>
 
@@ -265,6 +265,10 @@
         <label class="check">
           <input id="hideEmpty" type="checkbox" />
           <span data-i18n="hideEmpty">Hide Empty Servers</span>
+        </label>
+        <label class="check">
+          <input id="infantryOnlyToggle" type="checkbox" />
+          <span data-i18n="rulesetInfantryOnly">Infantry only</span>
         </label>
         <button id="refreshBtn" type="button" class="btn" data-i18n="refreshNow">Refresh Now</button>
       </div>
