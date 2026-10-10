@@ -60,11 +60,10 @@
         </p>
 
         <h2>2. Hosting / Bereitstellung der Website</h2>
-        <!-- TO VERIFY ON PLESK BEFORE PUBLIC RELEASE -->
         <p>
-          Beim Betrieb des Webservers können technische Zugriffsdaten verarbeitet werden.
-          Die konkrete Aufbewahrungsdauer der Hosting-/Webserver-Protokolle wird vor dem
-          öffentlichen Start anhand der Serverkonfiguration festgelegt.
+          Beim lokalen Betrieb auf dem eigenen PC werden keine öffentlichen Website-Logs
+          durch dieses Projekt bereitgestellt. Nutzt jemand die App hinter einem eigenen
+          Webserver, gelten die Log-Regeln dieses eigenen Hostings.
         </p>
 
         <h2>3. Server-Logdaten der Node-Anwendung</h2>
@@ -76,10 +75,9 @@
           (<code>WARDOGS_DEBUG=1</code>) ist nur aktiv, wenn ausdrücklich als
           Umgebungsvariable konfiguriert; es gibt keinen öffentlichen Browser-Debug-Schalter.
         </p>
-        <!-- TO VERIFY ON PLESK BEFORE PUBLIC RELEASE -->
         <p>
-          Die konkrete Aufbewahrungsdauer der Hosting-/Webserver-Protokolle wird vor dem
-          öffentlichen Start anhand der Serverkonfiguration festgelegt.
+          Für den vorgesehenen lokalen Desktop-Betrieb gibt es keine zentrale
+          Hosting-Log-Aufbewahrung durch den Projektbetreiber.
         </p>
 
         <h2>4. Sicherheit / Rate Limiting</h2>
@@ -161,8 +159,7 @@
           <li>optionale localStorage-Präferenzen: bis zur Deaktivierung/Löschung durch den Nutzer</li>
           <li>Rate-Limit-Zähler: flüchtig im Arbeitsspeicher, Fensterbezogen</li>
           <li>Upstream-Caches: kurzlebig im Arbeitsspeicher der Node-App</li>
-          <!-- TO VERIFY ON PLESK BEFORE PUBLIC RELEASE -->
-          <li>Hosting-/Webserver-Protokolle: Aufbewahrungsdauer wird vor öffentlichem Start anhand der Serverkonfiguration festgelegt</li>
+          <li>Lokaler Desktop-Betrieb: keine zentralen Hosting-Logs durch dieses Projekt</li>
         </ul>
 
         <h2>10. Rechte der betroffenen Personen</h2>
@@ -211,11 +208,10 @@
         </p>
 
         <h2>2. Hosting / website delivery</h2>
-        <!-- TO VERIFY ON PLESK BEFORE PUBLIC RELEASE -->
         <p>
-          When operating the web server, technical access data may be processed.
-          The concrete retention period for hosting/web-server logs will be
-          determined from the server configuration before public launch.
+          In the intended local desktop use, this project does not provide public
+          website access logs. If someone runs the app behind their own web server,
+          that host’s logging rules apply.
         </p>
 
         <h2>3. Node application logging</h2>
@@ -227,10 +223,9 @@
           only active when explicitly configured as an environment variable;
           there is no public browser debug toggle.
         </p>
-        <!-- TO VERIFY ON PLESK BEFORE PUBLIC RELEASE -->
         <p>
-          The concrete retention period for hosting/web-server logs will be
-          determined from the server configuration before public launch.
+          For the intended local desktop use there is no central hosting-log
+          retention by the project operator.
         </p>
 
         <h2>4. Security / rate limiting</h2>
@@ -309,8 +304,7 @@
           <li>optional localStorage preferences: until disabled/deleted by the user</li>
           <li>rate-limit counters: volatile in memory, window-based</li>
           <li>upstream caches: short-lived in Node process memory</li>
-          <!-- TO VERIFY ON PLESK BEFORE PUBLIC RELEASE -->
-          <li>hosting/web-server logs: retention will be set from server configuration before public launch</li>
+          <li>local desktop use: no central hosting logs by this project</li>
         </ul>
 
         <h2>10. Data-subject rights</h2>
