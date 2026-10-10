@@ -174,6 +174,8 @@
         "Lokales Community-Tool · Hilfe über GitHub Issues",
       githubStar: "★ Auf GitHub bewerten",
       githubStarAria: "Projekt auf GitHub öffnen und bewerten",
+      donate: "Spenden (PayPal)",
+      donateAria: "Über PayPal.me spenden",
       backToViewer: "Zurück zum Server Viewer",
       trademarkNotice:
         "Name, Logo und Artwork von WARDOGS gehören den jeweiligen Rechteinhabern. Offizielles Press-Kit-Material wird nur zur Darstellung dieses inoffiziellen Community-Viewers verwendet.",
@@ -343,6 +345,8 @@
         "Local community tool · Support via GitHub Issues",
       githubStar: "★ Star on GitHub",
       githubStarAria: "Open the project on GitHub to leave a star",
+      donate: "Donate (PayPal)",
+      donateAria: "Donate via PayPal.me",
       backToViewer: "Back to Server Viewer",
       trademarkNotice:
         "The WARDOGS name, logo and artwork belong to their respective rights holders. Official press-kit artwork is used only to present this unofficial community viewer.",

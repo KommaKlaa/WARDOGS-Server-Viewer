@@ -77,6 +77,8 @@ npm start
 
 Über [GitHub Issues](https://github.com/KommaKlaa/WARDOGS-Server-Viewer/issues).
 
+Optional: [Per PayPal spenden](https://paypal.me/jbtnc)
+
 ## Hinweis
 
 Name, Logo und Artwork von WARDOGS gehören den jeweiligen Rechteinhabern.  
