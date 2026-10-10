@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "desktop": "node server.js",
+    "build:portable": "node scripts/build-portable.js",
     "test": "node --test test/normalize.test.js test/i18n.test.js test/cache.test.js test/legal-privacy.test.js test/storage.test.js test/upstream-scheduler.test.js test/app-update.test.js",
     "optimize-assets": "node scripts/optimize-hero.js"
   },

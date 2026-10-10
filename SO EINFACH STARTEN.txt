@@ -1,17 +1,35 @@
-WARDOGS Server Viewer — so startest du
+WARDOGS Server Viewer — so startest du / quick start
 
-1. Einmalig: Node.js 22 LTS installieren
+DEUTSCH
+=======
+1. Einmalig Node.js 22 LTS installieren:
    https://nodejs.org/
 
-2. Danach Doppelklick auf:
-
+2. Doppelklick auf:
    Start WARDOGS Viewer.bat
 
-3. Der Browser öffnet sich automatisch.
-   Fenster offen lassen, solange du den Viewer nutzt.
-   Fenster schließen = Viewer beenden.
+3. Browser öffnet sich automatisch.
+   Fenster offen lassen.
+   Fenster schließen = beenden.
 
-Internet wird für Live-Serverdaten von Wardog Servers benötigt.
+Ausführliche Anleitung: README.de.md
+Support: GitHub Issues
+https://github.com/KommaKlaa/WARDOGS-Server-Viewer/issues
 
-Inoffizielles Community-Projekt.
-Nicht mit BULKHEAD oder Team17 verbunden.
+ENGLISH
+=======
+1. Install Node.js 22 LTS once:
+   https://nodejs.org/
+
+2. Double-click:
+   Start WARDOGS Viewer.bat
+
+3. Browser opens automatically.
+   Keep the window open.
+   Close the window to quit.
+
+Full guide: README.md
+Support: GitHub Issues
+https://github.com/KommaKlaa/WARDOGS-Server-Viewer/issues
+
+Unofficial community project. Not affiliated with BULKHEAD or Team17.

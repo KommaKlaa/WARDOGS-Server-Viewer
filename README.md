@@ -1,58 +1,85 @@
 # WARDOGS Server Viewer
 
-Unofficial local WARDOGS live server browser.
+[Deutsch / German](README.de.md)
 
-Find fresher rounds and level-compatible community servers.
+Unofficial **local** WARDOGS live server browser.
+
+Find fresher rounds and level-compatible community servers on your own PC.
 
 **Not affiliated with or endorsed by BULKHEAD or Team17.**  
 Server data is provided by [Wardog Servers](https://wardogservers.com).
 
+Repository: [KommaKlaa/WARDOGS-Server-Viewer](https://github.com/KommaKlaa/WARDOGS-Server-Viewer)
+
+---
+
 ## Requirements
 
-- Windows
-- [Node.js 22 LTS](https://nodejs.org/)
-- Internet connection (live server data)
+- Windows 10/11
+- [Node.js 22 LTS](https://nodejs.org/) (one-time install)
+- Internet connection for live server data
 
-## Start (one click)
+## Quick start
 
-1. Install Node.js 22 LTS once
-2. Double-click `Start WARDOGS Viewer.bat`
-3. Your browser opens at `http://localhost:3030`
-4. Keep the console window open while using the viewer
+1. Download the latest release **or** clone this repository
+2. Install Node.js 22 LTS if needed: https://nodejs.org/
+3. Double-click **`Start WARDOGS Viewer.bat`**
+4. Your browser opens at `http://localhost:3030`
+5. Keep the black console window open while using the viewer  
+   Close that window to quit
 
-## Features
+On first start, dependencies are installed automatically (`npm install`).
 
-- Live server list via local backend proxy
-- DE / EN interface
-- Region, map, level, round-age and occupancy filters
-- Optional local settings storage (opt-in)
-- In-app update check against GitHub Releases
+## Using the viewer
+
+- Switch language with **DE / EN**
+- Filter by region, map, server type, your level, level cap, round/map age, free slots
+- Sort by freshest rounds, players, free slots, or name
+- Copy join codes with one click
+- Optional: enable **Remember settings on this device** to store filters locally (no tracking cookies)
 
 ## Updates
 
-After you publish a GitHub Release, the app can detect and install updates.
+The app shows your installed version and can check GitHub Releases for updates.
 
-Configured repository:
+1. Open the viewer
+2. Use **Check for updates**
+3. If an update is available, choose **Update now**
 
-- Owner: `KommaKlaa`
-- Repo: `WARDOGS-Server-Viewer`
+Updates only work after a GitHub Release exists for this repository.
+
+## Portable build (developers)
+
+```bash
+npm run build:portable
+```
+
+Creates:
+
+`dist/WARDOGS-Server-Viewer-Portable-0.4.0.zip`
 
 ## Development
 
 ```bash
 npm install
-npm start
 npm test
+npm start
 ```
 
-Desktop mode (opens browser):
+Desktop mode (auto-open browser):
 
 ```bash
 set WARDOGS_DESKTOP=1
 npm start
 ```
 
+## Support
+
+Use [GitHub Issues](https://github.com/KommaKlaa/WARDOGS-Server-Viewer/issues).
+
 ## Disclaimer
 
 WARDOGS name, logo and artwork belong to their respective rights holders.  
 Official press-kit artwork is used only to present this unofficial community viewer.
+
+License: [MIT](LICENSE)
