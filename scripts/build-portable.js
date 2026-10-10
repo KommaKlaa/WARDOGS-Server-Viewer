@@ -54,8 +54,6 @@ function main() {
     copy(src, path.join(stageDir, item));
   }
 
-  // Do not ship legal placeholder pages as primary docs in portable package? Keep for now.
-
   if (process.platform === "win32") {
     // Zip the folder so extract creates one clear app directory.
     execFileSync(

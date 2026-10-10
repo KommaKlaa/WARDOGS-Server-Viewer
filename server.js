@@ -13,9 +13,9 @@ const IS_PROD = NODE_ENV === "production";
 const IS_DESKTOP =
   process.env.WARDOGS_DESKTOP === "1" ||
   process.env.WARDOGS_OPEN_BROWSER === "1";
-// Prefer runtime PORT from Plesk/Passenger; local fallback only.
+// Prefer runtime PORT when provided; local fallback 3030.
 const PORT = Number(process.env.PORT) || 3030;
-// Desktop/local: always bind localhost. Production/Passenger: HOST optional.
+// Desktop/local: always bind localhost. Hosting/reverse-proxy: HOST optional.
 const HOST =
   process.env.HOST ||
   (IS_DESKTOP ? "127.0.0.1" : IS_PROD ? null : "127.0.0.1");
@@ -51,8 +51,7 @@ app.disable("x-powered-by");
 app.use(express.json({ limit: "32kb" }));
 
 // Conservative trust-proxy: disabled by default.
-// Behind Plesk/nginx set TRUST_PROXY=1 (hop count) only after verifying topology.
-// TRUST_PROXY_PLESK_VERIFY = REQUIRED until production proxy chain is confirmed.
+// Behind a reverse proxy set TRUST_PROXY=1 (hop count) only after verifying topology.
 if (process.env.TRUST_PROXY != null && String(process.env.TRUST_PROXY).trim() !== "") {
   const raw = String(process.env.TRUST_PROXY).trim();
   if (raw === "true" || raw === "1") {
@@ -385,7 +384,7 @@ app.use((err, _req, res, _next) => {
 });
 
 // Direct `node server.js` / local desktop start.
-// Plesk Passenger uses the exported app and does not require this listen path.
+// Some hosts may import the exported app instead of calling listen.
 if (require.main === module) {
   const onListen = () => {
     const hostLabel = !HOST || HOST === "127.0.0.1" ? "localhost" : HOST;
@@ -405,7 +404,7 @@ if (require.main === module) {
   else app.listen(PORT, onListen);
 }
 
-// Default export is the Express app for Phusion Passenger / Plesk Node.js Toolkit.
+// Default export is the Express app (for hosts that mount it without listen).
 module.exports = app;
 module.exports.app = app;
 module.exports.cache = cache;
