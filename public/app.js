@@ -1353,6 +1353,12 @@
         els.updateStatusText.textContent = t("versionUpdateDone");
       }
       renderUpdateBanner();
+      // Server restarts after apply; force a full reload so cached HTML/CSS/JS are replaced.
+      if (json.applied || json.restartRequired) {
+        window.setTimeout(() => {
+          window.location.reload();
+        }, 2200);
+      }
     } catch {
       updateInfo = { ...updateInfo, applying: false, message: "update_apply_failed" };
       if (els.updateStatusText) {

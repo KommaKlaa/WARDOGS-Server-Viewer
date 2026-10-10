@@ -370,8 +370,14 @@ app.post("/api/app/update-apply", async (req, res) => {
 
 app.use(
   express.static(path.join(__dirname, "public"), {
-    maxAge: IS_PROD ? "1h" : 0,
+    // Desktop self-updates must not leave users on a cached shell for an hour.
+    maxAge: IS_DESKTOP ? 0 : IS_PROD ? "1h" : 0,
     etag: true,
+    setHeaders(res, filePath) {
+      if (IS_DESKTOP || /\.(html|js|css)$/i.test(filePath)) {
+        res.setHeader("Cache-Control", "no-cache, must-revalidate");
+      }
+    },
   })
 );
 
