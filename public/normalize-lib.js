@@ -223,6 +223,29 @@
     return n;
   }
 
+  /**
+   * Public join slots: maxPlayers minus current players minus reserved slots.
+   */
+  function computeFreeSlots(server) {
+    const max = Number(server?.maxPlayers) || 0;
+    const players = Number(server?.players) || 0;
+    const reserved = Math.max(0, Number(server?.reservedPlayers) || 0);
+    return Math.max(0, max - players - reserved);
+  }
+
+  /**
+   * Primary ruleset from API rulesets[] (standard | infantry-only | hardcore).
+   */
+  function primaryRuleset(server) {
+    const list = Array.isArray(server?.rulesets)
+      ? server.rulesets.map((r) => String(r || "").toLowerCase())
+      : [];
+    if (list.includes("infantry-only")) return "infantry-only";
+    if (list.includes("hardcore")) return "hardcore";
+    if (list.includes("standard")) return "standard";
+    return list[0] || "standard";
+  }
+
   return {
     MAP_BY_RAW,
     REGION_GROUPS,
@@ -233,5 +256,7 @@
     findCurrentMapEvent,
     capFilter,
     resolveLevelCapSetting,
+    computeFreeSlots,
+    primaryRuleset,
   };
 });

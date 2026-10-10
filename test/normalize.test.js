@@ -9,6 +9,8 @@ const {
   findCurrentMapEvent,
   capFilter,
   resolveLevelCapSetting,
+  computeFreeSlots,
+  primaryRuleset,
   REGION_GROUPS,
 } = require("../public/normalize-lib.js");
 
@@ -202,5 +204,42 @@ describe("level 37 + restricted-compatible + cap 50", () => {
   });
   it("excludes unrestricted 0/0", () => {
     assert.equal(passesCombo({ min: 0, max: 0 }, user, cap), false);
+  });
+});
+
+describe("computeFreeSlots", () => {
+  it("subtracts reservedPlayers from public free slots", () => {
+    assert.equal(
+      computeFreeSlots({ players: 90, maxPlayers: 100, reservedPlayers: 4 }),
+      6
+    );
+  });
+
+  it("never goes negative", () => {
+    assert.equal(
+      computeFreeSlots({ players: 98, maxPlayers: 100, reservedPlayers: 10 }),
+      0
+    );
+  });
+
+  it("treats missing reserved as zero", () => {
+    assert.equal(computeFreeSlots({ players: 10, maxPlayers: 100 }), 90);
+  });
+});
+
+describe("primaryRuleset", () => {
+  it("prefers infantry-only over standard", () => {
+    assert.equal(
+      primaryRuleset({ rulesets: ["standard", "infantry-only"] }),
+      "infantry-only"
+    );
+  });
+
+  it("defaults to standard when empty", () => {
+    assert.equal(primaryRuleset({}), "standard");
+  });
+
+  it("keeps hardcore", () => {
+    assert.equal(primaryRuleset({ rulesets: ["hardcore"] }), "hardcore");
   });
 });

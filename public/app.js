@@ -30,6 +30,8 @@
     findCurrentMapEvent,
     capFilter,
     resolveLevelCapSetting,
+    computeFreeSlots,
+    primaryRuleset,
     REGION_GROUPS,
   } = Normalize;
 
@@ -90,6 +92,7 @@
     search: document.getElementById("search"),
     mapFilter: document.getElementById("mapFilter"),
     serverType: document.getElementById("serverType"),
+    rulesetFilter: document.getElementById("rulesetFilter"),
     myLevel: document.getElementById("myLevel"),
     levelFilter: document.getElementById("levelFilter"),
     levelCapFilter: document.getElementById("levelCapFilter"),
@@ -151,6 +154,7 @@
     selectedRegions: [],
     mapFilter: "",
     serverType: "all",
+    rulesetFilter: "all",
     hideFull: false,
     hideEmpty: false,
     levelFilter: "all",
@@ -212,6 +216,19 @@
       const key = typeMap[opt.value];
       if (key) opt.textContent = t(key);
     });
+
+    const rulesetMap = {
+      all: "rulesetAll",
+      standard: "rulesetStandard",
+      "infantry-only": "rulesetInfantryOnly",
+      hardcore: "rulesetHardcore",
+    };
+    if (els.rulesetFilter) {
+      [...els.rulesetFilter.options].forEach((opt) => {
+        const key = rulesetMap[opt.value];
+        if (key) opt.textContent = t(key);
+      });
+    }
 
     const levelMap = {
       all: "levelFilterAll",
@@ -327,6 +344,7 @@
       selectedRegions: [...selectedRegions],
       mapFilter: els.mapFilter.value,
       serverType: els.serverType.value,
+      rulesetFilter: els.rulesetFilter?.value || "all",
       hideFull: els.hideFull.checked,
       hideEmpty: els.hideEmpty.checked,
       levelFilter: els.levelFilter.value || "all",
@@ -387,6 +405,9 @@
   function applySettings(settings) {
     els.myLevel.value = String(settings.myLevel ?? DEFAULT_MY_LEVEL);
     els.serverType.value = settings.serverType || "all";
+    if (els.rulesetFilter) {
+      els.rulesetFilter.value = settings.rulesetFilter || "all";
+    }
     els.hideFull.checked = Boolean(settings.hideFull);
     els.hideEmpty.checked = Boolean(settings.hideEmpty);
     els.levelFilter.value = settings.levelFilter || "all";
@@ -435,9 +456,14 @@
   }
 
   function freeSlots(server) {
-    const max = Number(server.maxPlayers) || 0;
-    const players = Number(server.players) || 0;
-    return Math.max(0, max - players);
+    return computeFreeSlots(server);
+  }
+
+  function rulesetLabel(ruleset) {
+    if (ruleset === "infantry-only") return t("rulesetInfantryOnly");
+    if (ruleset === "hardcore") return t("rulesetHardcore");
+    if (ruleset === "standard") return t("rulesetStandard");
+    return ruleset || t("rulesetStandard");
   }
 
   function formatDuration(totalSeconds) {
@@ -715,6 +741,7 @@
     const q = els.search.value.trim().toLowerCase();
     const map = els.mapFilter.value;
     const type = els.serverType.value;
+    const ruleset = els.rulesetFilter?.value || "all";
     const hideFull = els.hideFull.checked;
     const hideEmpty = els.hideEmpty.checked;
     const minFree = els.minFree.value ? Number(els.minFree.value) : null;
@@ -724,6 +751,7 @@
     return servers.filter((s) => {
       if (regionSet && !regionSet.has(s.region)) return false;
       if (type !== "all" && s.type !== type) return false;
+      if (ruleset !== "all" && primaryRuleset(s) !== ruleset) return false;
       if (map && mapId(s) !== map) return false;
 
       const players = Number(s.players) || 0;
@@ -744,6 +772,9 @@
           mapName(s),
           s.mode?.experience,
           s.mode?.gameMode,
+          primaryRuleset(s),
+          rulesetLabel(primaryRuleset(s)),
+          ...(Array.isArray(s.mode?.modifiers) ? s.mode.modifiers : []),
         ]
           .filter(Boolean)
           .join(" ")
@@ -1038,18 +1069,30 @@
             : s.type === "community"
               ? t("community")
               : s.type || "—";
+        const ruleset = primaryRuleset(s);
+        const reserved = Math.max(0, Number(s.reservedPlayers) || 0);
+        const free = freeSlots(s);
+        const freeTitle =
+          reserved > 0
+            ? `${free} · ${t("reservedSlotsNote", { count: reserved })}`
+            : String(free);
+        const rulesetBadge =
+          ruleset && ruleset !== "standard"
+            ? `<div class="name-sub ruleset-tag">${escapeHtml(rulesetLabel(ruleset))}</div>`
+            : "";
 
         return `<tr class="${blocked ? "blocked" : ""}" data-id="${escapeHtml(s.id)}">
           <td><span class="status-pill ${status.cls}">${escapeHtml(status.text)}</span></td>
           <td class="name-cell">
             <div class="name-main" title="${escapeHtml(s.name || s.nativeName || "")}">${escapeHtml(s.name || s.nativeName || t("unnamed"))}</div>
             ${s.passwordProtected ? `<div class="name-sub">${escapeHtml(t("passwordProtected"))}</div>` : ""}
+            ${rulesetBadge}
           </td>
           <td class="map-cell">${escapeHtml(mapName(s))}</td>
           <td title="${escapeHtml(s.region || "")}">${escapeHtml(regionLabel(s.region || "—"))}</td>
           <td class="${typeCls}">${escapeHtml(typeLabel)}</td>
           <td class="mono">${Number(s.players) || 0}/${Number(s.maxPlayers) || 0}</td>
-          <td class="mono">${freeSlots(s)}</td>
+          <td class="mono" title="${escapeHtml(freeTitle)}">${free}</td>
           <td>${renderAgeCell(s)}</td>
           <td>${renderLevelCell(s)}</td>
           <td><div class="join-code" title="${escapeHtml(joinDisplay)}">${escapeHtml(joinDisplay)}</div></td>
@@ -1448,6 +1491,7 @@
       els.search,
       els.mapFilter,
       els.serverType,
+      els.rulesetFilter,
       els.myLevel,
       els.levelFilter,
       els.levelCapFilter,
@@ -1457,7 +1501,9 @@
       els.sortMode,
       els.hideFull,
       els.hideEmpty,
-    ].forEach((el) => {
+    ]
+      .filter(Boolean)
+      .forEach((el) => {
       el.addEventListener("change", onChange);
       if (el.tagName === "INPUT" && el.type !== "checkbox") {
         el.addEventListener("input", () => {
