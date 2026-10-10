@@ -164,9 +164,9 @@ a {
 .hero-header {
   position: relative;
   min-height: 170px;
-  max-height: 260px;
+  max-height: none;
   padding: 18px 20px 16px;
-  overflow: hidden;
+  overflow: visible;
   background:
     linear-gradient(135deg, rgba(8, 10, 12, 0.55) 0%, rgba(8, 10, 12, 0.78) 55%, rgba(8, 10, 12, 0.88) 100%);
 }
@@ -188,6 +188,8 @@ a {
   letter-spacing: 0.14em;
   color: rgba(196, 163, 90, 0.55);
   text-transform: uppercase;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .brand-block {
@@ -232,21 +234,25 @@ a {
   gap: 8px;
   align-items: center;
   justify-content: flex-end;
+  position: relative;
+  z-index: 1;
+  margin-top: 18px;
 }
 
 .github-star-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 7px 12px;
-  border: 1px solid rgba(196, 163, 90, 0.4);
-  background: rgba(0, 0, 0, 0.4);
-  color: var(--amber);
+  padding: 8px 14px;
+  border: 1px solid rgba(224, 184, 77, 0.55);
+  background: rgba(196, 163, 90, 0.16);
+  color: var(--amber-hot);
   text-decoration: none;
   font-family: var(--mono);
-  font-size: 0.74rem;
+  font-size: 0.78rem;
   letter-spacing: 0.04em;
   white-space: nowrap;
+  font-weight: 600;
 }
 
 .github-star-btn:hover {
