@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Unofficial WARDOGS live server browser — find fresher rounds and level-compatible community servers." />
+  <title>WARDOGS Server Viewer</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="bg-fallback" aria-hidden="true"></div>
+  <div class="bg-veil" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-noise" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header hero-header">
+      <div class="hud-corners" aria-hidden="true"></div>
+      <div class="hero-coords" aria-hidden="true">WD-SV // 48.13N · 11.58E</div>
+      <div class="brand-block">
+        <img
+          class="brand-logo"
+          src="/assets/wardogs/WD_Fullmark_Full.svg"
+          alt="WARDOGS"
+          width="280"
+          height="72"
+        />
+        <div class="brand-copy">
+          <p class="brand-subtitle" data-i18n="brandSubtitle">SERVER INTELLIGENCE</p>
+          <p class="brand-tagline" data-i18n="brandTagline">LIVE SERVER BROWSER</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="lang-switch" role="group" data-i18n-aria="language" aria-label="Language">
+          <button type="button" id="langDe" class="lang-btn" aria-pressed="false">DE</button>
+          <button type="button" id="langEn" class="lang-btn" aria-pressed="false">EN</button>
+        </div>
+
+        <div class="status-panel">
+          <div class="status-row live-row">
+            <span class="live-dot" aria-hidden="true"></span>
+            <span data-i18n="liveNetwork">LIVE NETWORK</span>
+          </div>
+          <div class="status-row">
+            <span class="label" data-i18n="apiOnline">API</span>
+            <span id="apiStatus" class="badge badge-idle">—</span>
+          </div>
+          <div class="status-row">
+            <span class="label" data-i18n="lastUpdate">Last Update</span>
+            <span id="lastRefresh">—</span>
+          </div>
+          <div class="status-row">
+            <span class="label" data-i18n="visibleServers">Visible Servers</span>
+            <span id="visibleCount">0</span>
+          </div>
+          <div id="staleBanner" class="stale-banner hidden" data-i18n="apiDataStale">DATA STALE</div>
+        </div>
+      </div>
+    </header>
+
+    <section id="updateBanner" class="update-banner tactical-panel" aria-live="polite">
+      <div class="hud-corners" aria-hidden="true"></div>
+      <div class="update-banner-main">
+        <div class="update-banner-text">
+          <strong class="update-version-label">
+            <span data-i18n="versionLabel">Version</span>
+            <span id="appVersionLocal">—</span>
+          </strong>
+          <p id="updateStatusText" class="update-status-text">—</p>
+          <p id="updateMetaText" class="update-meta-text"></p>
+        </div>
+        <div class="update-banner-actions">
+          <button type="button" id="updateCheckBtn" class="btn-secondary" data-i18n="versionCheckButton">
+            Check for updates
+          </button>
+          <button type="button" id="updateApplyBtn" class="btn hidden" data-i18n="versionUpdateNow">
+            Update now
+          </button>
+          <button type="button" id="updateLaterBtn" class="btn-secondary hidden" data-i18n="versionLater">
+            Later
+          </button>
+          <a id="updateReleaseLink" class="btn-secondary hidden" href="#" target="_blank" rel="noopener noreferrer" data-i18n="versionOpenRelease">
+            Open release
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="controls tactical-panel" aria-label="Filters">
+      <div class="hud-corners" aria-hidden="true"></div>
+      <div class="control-grid">
+        <label class="field">
+          <span data-i18n="search">Search</span>
+          <input id="search" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Name, map, join code…" />
+        </label>
+
+        <div class="field region-field">
+          <span data-i18n="regions">Regions</span>
+          <div class="region-picker" id="regionPicker">
+            <button
+              type="button"
+              id="regionToggle"
+              class="region-toggle"
+              aria-expanded="false"
+              aria-controls="regionPanel"
+              data-i18n-aria="regions"
+            >
+              <span id="regionSummary">All Regions</span>
+              <span class="region-caret" aria-hidden="true">▾</span>
+            </button>
+            <div id="regionPanel" class="region-panel hidden" role="dialog" aria-label="Regions">
+              <div class="region-panel-heading" data-i18n="quickSelect">Quick select</div>
+              <div class="region-presets" id="regionPresets"></div>
+              <div class="region-groups" id="regionGroups"></div>
+              <div class="region-actions">
+                <button type="button" id="regionSelectAll" class="btn-secondary" data-i18n="selectAll">Select all</button>
+                <button type="button" id="regionClear" class="btn-secondary" data-i18n="clearSelection">Clear selection</button>
+                <button type="button" id="regionApply" class="btn" data-i18n="apply">Apply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <label class="field">
+          <span data-i18n="map">Map</span>
+          <select id="mapFilter">
+            <option value="">All Maps</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span data-i18n="serverType">Server Type</span>
+          <select id="serverType">
+            <option value="all" data-i18n="allServers">All Servers</option>
+            <option value="official" data-i18n="official">Official</option>
+            <option value="community" data-i18n="community">Community</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span data-i18n="myLevel">My Level</span>
+          <input id="myLevel" type="number" min="1" max="999" value="37" />
+        </label>
+
+        <label class="field">
+          <span data-i18n="levelFilter">LEVEL FILTER</span>
+          <select id="levelFilter">
+            <option value="all" data-i18n="levelFilterAll">All Servers</option>
+            <option value="compatible" data-i18n="levelFilterCompatible">Compatible with my level</option>
+            <option value="restricted-compatible" data-i18n="levelFilterRestrictedCompatible">Only matching level-restricted servers</option>
+            <option value="unrestricted" data-i18n="levelFilterUnrestricted">Only servers without level restriction</option>
+            <option value="incompatible" data-i18n="levelFilterIncompatible">Incompatible with my level</option>
+          </select>
+        </label>
+
+        <div class="field level-cap-field">
+          <span data-i18n="levelCap">LEVEL CAP</span>
+          <select id="levelCapFilter">
+            <option value="any" data-i18n="levelCapAny">Any</option>
+            <option value="50" data-i18n="levelCap50">Up to Level 50</option>
+            <option value="100" data-i18n="levelCap100">Up to Level 100</option>
+            <option value="150" data-i18n="levelCap150">Up to Level 150</option>
+            <option value="200" data-i18n="levelCap200">Up to Level 200</option>
+            <option value="300" data-i18n="levelCap300">Up to Level 300</option>
+            <option value="500" data-i18n="levelCap500">Up to Level 500</option>
+            <option value="1000" data-i18n="levelCap1000">Up to Level 1000</option>
+            <option value="custom" data-i18n="levelCapCustom">Custom</option>
+          </select>
+          <label id="customLevelCapWrap" class="custom-cap-wrap hidden">
+            <span data-i18n="customMaxLevel">Max Level</span>
+            <input id="customLevelCap" type="number" min="1" max="10000" step="1" value="75" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span data-i18n="maxRoundMapAge">MAXIMUM ROUND / MAP AGE</span>
+          <select id="maxAge">
+            <option value="" data-i18n="any">Any</option>
+            <option value="10" data-i18n="age10">10 min</option>
+            <option value="20" data-i18n="age20">20 min</option>
+            <option value="30" data-i18n="age30">30 min</option>
+            <option value="45" data-i18n="age45">45 min</option>
+            <option value="60" data-i18n="age60">60 min</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span data-i18n="minFreeSlots">Minimum Free Slots</span>
+          <select id="minFree">
+            <option value="" data-i18n="any">Any</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="4">4</option>
+            <option value="8">8</option>
+            <option value="10">10</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span data-i18n="sort">Sort</span>
+          <select id="sortMode">
+            <option value="freshest" data-i18n="sortFreshest">Freshest first</option>
+            <option value="players" data-i18n="sortPlayers">Most players</option>
+            <option value="free" data-i18n="sortFree">Most free slots</option>
+            <option value="name" data-i18n="sortName">Server name</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="toggles">
+        <label class="check">
+          <input id="hideFull" type="checkbox" />
+          <span data-i18n="hideFull">Hide Full Servers</span>
+        </label>
+        <label class="check">
+          <input id="hideEmpty" type="checkbox" />
+          <span data-i18n="hideEmpty">Hide Empty Servers</span>
+        </label>
+        <button id="refreshBtn" type="button" class="btn" data-i18n="refreshNow">Refresh Now</button>
+      </div>
+      <div class="storage-pref">
+        <label class="check storage-check">
+          <input id="rememberSettings" type="checkbox" />
+          <span data-i18n="rememberSettings">Remember settings on this device</span>
+        </label>
+        <p class="storage-hint" data-i18n="rememberSettingsHint">
+          Saves language and server filters locally in this browser. No tracking cookies are used.
+        </p>
+      </div>
+    </section>
+
+    <section class="table-wrap tactical-panel">
+      <div class="hud-corners" aria-hidden="true"></div>
+      <table class="server-table">
+        <thead>
+          <tr>
+            <th data-i18n="colStatus">Status</th>
+            <th data-i18n="colServer">Server</th>
+            <th data-i18n="colMap">Map</th>
+            <th data-i18n="colRegion">Region</th>
+            <th data-i18n="colType">Type</th>
+            <th data-i18n="colPlayers">Players</th>
+            <th data-i18n="colFreeSlots">Free Slots</th>
+            <th>
+              <span data-i18n="colRoundMapAge">ROUND / MAP AGE</span>
+              <button type="button" class="info-tip" id="ageInfoBtn" data-i18n-title="ageTooltip" title="">i</button>
+            </th>
+            <th data-i18n="colLevelRestriction">LEVEL RESTRICTION</th>
+            <th data-i18n="colJoinCode">Join Code</th>
+            <th data-i18n="colAction">Action</th>
+          </tr>
+        </thead>
+        <tbody id="serverBody">
+          <tr class="empty-row">
+            <td colspan="11" data-i18n="loadingServers">Loading servers…</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer class="footer">
+      <p class="footer-legal" data-i18n="footerLocalSupport">
+        Local community tool · Support via GitHub Issues
+      </p>
+      <p class="disclaimer" data-i18n="footerDisclaimer">
+        Unofficial community project. Not affiliated with or endorsed by BULKHEAD or Team17. Server data provided by Wardog Servers.
+      </p>
+      <p class="footer-meta">
+        <span data-i18n="dataVia">Data via</span>
+        <a href="https://wardogservers.com" target="_blank" rel="noopener noreferrer">Wardog Servers</a>
+        · <span data-i18n="footerAgeNote">Round/Map Age is not remaining match time.</span>
+      </p>
+      <p class="footer-trademark" data-i18n="trademarkNotice"></p>
+    </footer>
+  </div>
+
+  <script src="/normalize-lib.js"></script>
+  <script src="/i18n.js"></script>
+  <script src="/storage-lib.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

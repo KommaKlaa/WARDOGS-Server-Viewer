@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,follow" />
+  <title>Datenschutz / Privacy</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body class="legal-body" data-page-title-key="privacyPageTitle">
+  <div class="bg-fallback" aria-hidden="true"></div>
+  <div class="bg-veil" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-noise" aria-hidden="true"></div>
+
+  <div class="app legal-app">
+    <header class="header legal-header">
+      <div class="brand-block">
+        <a href="/" class="brand-home-link">
+          <img
+            class="brand-logo brand-logo-sm"
+            src="/assets/wardogs/WD_Fullmark_Full.svg"
+            alt="WARDOGS"
+            width="220"
+            height="56"
+          />
+        </a>
+        <p class="brand-subtitle" data-i18n="privacyPageTitle">Datenschutz / Privacy</p>
+      </div>
+      <div class="header-right">
+        <div class="lang-switch" role="group" data-i18n-aria="language" aria-label="Language">
+          <button type="button" id="langDe" class="lang-btn" aria-pressed="false">DE</button>
+          <button type="button" id="langEn" class="lang-btn" aria-pressed="false">EN</button>
+        </div>
+        <a class="btn btn-inline" href="/" data-i18n="backToViewer">Back to Server Viewer</a>
+      </div>
+    </header>
+
+    <main class="legal-panel tactical-panel">
+      <div class="hud-corners" aria-hidden="true"></div>
+
+      <article data-lang-block="de">
+        <h1>Datenschutzerklärung</h1>
+        <p class="legal-note">
+          Diese Erklärung beschreibt die tatsächlich aus dem Anwendungscode
+          ableitbare Verarbeitung. Sie ist eine Betreiber-Vorlage und sollte vor
+          dem öffentlichen Launch rechtlich geprüft werden.
+        </p>
+
+        <h2>1. Verantwortlicher / Controller</h2>
+        <p>
+          [NAME DES BETREIBERS]<br />
+          [LADUNGSFÄHIGE ANSCHRIFT]<br />
+          [PLZ ORT]<br />
+          [LAND]
+        </p>
+        <p>
+          Elektronischer Kontakt:
+          <a href="mailto:dev@lusor.eu">dev@lusor.eu</a>
+        </p>
+
+        <h2>2. Hosting / Bereitstellung der Website</h2>
+        <!-- TO VERIFY ON PLESK BEFORE PUBLIC RELEASE -->
+        <p>
+          Beim Betrieb des Webservers können technische Zugriffsdaten verarbeitet werden.
+          Die konkrete Aufbewahrungsdauer der Hosting-/Webserver-Protokolle wird vor dem
+          öffentlichen Start anhand der Serverkonfiguration festgelegt.
+        </p>
+
+        <h2>3. Server-Logdaten der Node-Anwendung</h2>
+        <p>
+          Die Node-/Express-Anwendung selbst schreibt keine umfassenden
+          Request-Zugriffsprotokolle. In der Produktionskonfiguration werden
+          Fehler in der Regel nur mit Fehlercode/Status geloggt, ohne Stack-Traces
+          an den Browser auszugeben. Optionales serverseitiges Debug-Logging
+          (<code>WARDOGS_DEBUG=1</code>) ist nur aktiv, wenn ausdrücklich als
+          Umgebungsvariable konfiguriert; es gibt keinen öffentlichen Browser-Debug-Schalter.
+        </p>
+        <!-- TO VERIFY ON PLESK BEFORE PUBLIC RELEASE -->
+        <p>
+          Die konkrete Aufbewahrungsdauer der Hosting-/Webserver-Protokolle wird vor dem
+          öffentlichen Start anhand der Serverkonfiguration festgelegt.
+        </p>
+
+        <h2>4. Sicherheit / Rate Limiting</h2>
+        <p>
+          Zum Schutz vor Missbrauch nutzt die Anwendung
+          <code>express-rate-limit</code> für die Route <code>/api/*</code>.
+        </p>
+        <ul>
+          <li>Identifikator: Client-IP (<code>request.ip</code>, mit IPv6-Normalisierung)</li>
+          <li>Fenster: 60 Sekunden</li>
+          <li>Limit: 240 Anfragen pro Fenster</li>
+          <li>Speicher: Standard-MemoryStore (nur Arbeitsspeicher, kein Disk-/DB-Persistenz durch die App)</li>
+        </ul>
+        <p>
+          Mögliche Rechtsgrundlage (Vorlage zur Prüfung): Art. 6 Abs. 1 lit. f DSGVO
+          (berechtigte Interessen an sicherem Betrieb, Missbrauchsprävention,
+          Verfügbarkeit und Fehleranalyse).
+        </p>
+
+        <h2>5. Local Storage / Einstellungen</h2>
+        <p>
+          Die Anwendung setzt keine eigenen Cookies und verwendet kein sessionStorage.
+          Permanente Komforteinstellungen werden nur gespeichert, wenn der Nutzer
+          ausdrücklich aktiviert:
+          „Einstellungen auf diesem Gerät speichern“ /
+          „Remember settings on this device“ (Standard: aus).
+        </p>
+        <p>
+          Nach ausdrücklicher Aktivierung können folgende localStorage-Schlüssel gesetzt werden:
+        </p>
+        <ul>
+          <li><code>wardogs-storage-consent</code> — speichert nur, dass die Persistenz ausdrücklich gewünscht wurde (<code>granted-v1</code>)</li>
+          <li><code>wardogs-language</code> — gewählte UI-Sprache (DE/EN)</li>
+          <li><code>wardogs-viewer-settings-v1</code> — JSON mit Filtern/Einstellungen (u. a. Mein Level, Regionen, Karte, Level-Filter, Level-Cap, Sortierung, Belegung)</li>
+        </ul>
+        <p>
+          Gespeicherte Präferenzen verbleiben im Browser des Nutzers.
+          Dritte erhalten diese Werte nicht über Tracking-Mechanismen dieser Anwendung.
+          Wird die Speichern-Option wieder deaktiviert, werden die genannten
+          Anwendungsschlüssel sofort entfernt. Aktive Filtereinstellungen bleiben
+          bis zum nächsten Neuladen in der laufenden Sitzung nutzbar.
+        </p>
+        <p>
+          Ohne Aktivierung funktioniert die Anwendung vollständig mit Session-/Runtime-Zustand;
+          nach einem Neuladen gelten wieder Standardwerte bzw. die Browser-Sprache.
+          Es wird kein Cookie-Banner ausgeliefert (keine Anwendungs-Cookies, kein Tracking).
+        </p>
+
+        <h2>6. WARDOGS-Serverdaten / Backend-API</h2>
+        <p>
+          Der Browser kommuniziert ausschließlich mit unserem Backend unter
+          <code>/api/...</code>. Das Backend ruft serverseitig die Wardog-Servers-API
+          unter <code>https://api.wardogservers.com</code> auf.
+          Es findet kein direkter Browser-Aufruf dieser Upstream-API statt.
+        </p>
+        <p>
+          Dabei werden Live-Serverlisten, Regionsdaten, Server-Details und
+          Map-History abgefragt, um die Viewer-Funktion bereitzustellen.
+          Antworten können serverseitig zwischengespeichert werden.
+        </p>
+
+        <h2>7. Externe Links</h2>
+        <p>
+          Die Website kann auf externe Angebote verlinken (z. B. Wardog Servers).
+          Beim Folgen eines solchen Links verlassen Nutzer diese Website; es gelten
+          die Datenschutzbestimmungen des jeweiligen Anbieters. Externe Seiten werden
+          nicht unsichtbar im Hintergrund geladen.
+        </p>
+
+        <h2>8. Keine Analyse / Werbung / Profiling</h2>
+        <p>
+          Die Anwendung enthält keine Analyse-/Tracking-Skripte, kein Advertising,
+          keine Social-Media-Pixel und keine Third-Party-Fonts.
+          Frontend-Assets (CSS/JS/Bilder/Logos) werden lokal ausgeliefert.
+        </p>
+
+        <h2>9. Speicherdauer</h2>
+        <ul>
+          <li>optionale localStorage-Präferenzen: bis zur Deaktivierung/Löschung durch den Nutzer</li>
+          <li>Rate-Limit-Zähler: flüchtig im Arbeitsspeicher, Fensterbezogen</li>
+          <li>Upstream-Caches: kurzlebig im Arbeitsspeicher der Node-App</li>
+          <!-- TO VERIFY ON PLESK BEFORE PUBLIC RELEASE -->
+          <li>Hosting-/Webserver-Protokolle: Aufbewahrungsdauer wird vor öffentlichem Start anhand der Serverkonfiguration festgelegt</li>
+        </ul>
+
+        <h2>10. Rechte der betroffenen Personen</h2>
+        <p>
+          Soweit die DSGVO anwendbar ist, bestehen insbesondere Rechte auf Auskunft,
+          Berichtigung, Löschung, Einschränkung der Verarbeitung, Widerspruch sowie
+          Datenübertragbarkeit, jeweils nach Maßgabe der gesetzlichen Voraussetzungen.
+          Anfragen an:
+          <a href="mailto:dev@lusor.eu">dev@lusor.eu</a>
+        </p>
+
+        <h2>11. Beschwerde bei einer Aufsichtsbehörde</h2>
+        <p>
+          Betroffene Personen können sich bei einer Datenschutz-Aufsichtsbehörde
+          beschweren, insbesondere am Ort ihres gewöhnlichen Aufenthalts oder am Ort
+          des mutmaßlichen Verstoßes.
+        </p>
+
+        <h2>12. Änderungen</h2>
+        <p>
+          Diese Datenschutzerklärung kann angepasst werden, wenn sich die
+          tatsächliche Verarbeitung ändert. Maßgeblich ist die jeweils auf dieser
+          Seite veröffentlichte Fassung.
+        </p>
+      </article>
+
+      <article data-lang-block="en" hidden>
+        <h1>Privacy Notice</h1>
+        <p class="legal-note">
+          This notice describes processing that can be derived from the actual
+          application code. It is a template for the operator and should be
+          reviewed before public launch. Where relevant, the German operator
+          details are authoritative.
+        </p>
+
+        <h2>1. Controller</h2>
+        <p>
+          [NAME DES BETREIBERS]<br />
+          [LADUNGSFÄHIGE ANSCHRIFT]<br />
+          [PLZ ORT]<br />
+          [LAND]
+        </p>
+        <p>
+          Electronic contact:
+          <a href="mailto:dev@lusor.eu">dev@lusor.eu</a>
+        </p>
+
+        <h2>2. Hosting / website delivery</h2>
+        <!-- TO VERIFY ON PLESK BEFORE PUBLIC RELEASE -->
+        <p>
+          When operating the web server, technical access data may be processed.
+          The concrete retention period for hosting/web-server logs will be
+          determined from the server configuration before public launch.
+        </p>
+
+        <h2>3. Node application logging</h2>
+        <p>
+          The Node/Express application itself does not write comprehensive
+          request access logs. In production, errors are typically logged as
+          code/status only, without exposing stack traces to the browser.
+          Optional server-side debug logging (<code>WARDOGS_DEBUG=1</code>) is
+          only active when explicitly configured as an environment variable;
+          there is no public browser debug toggle.
+        </p>
+        <!-- TO VERIFY ON PLESK BEFORE PUBLIC RELEASE -->
+        <p>
+          The concrete retention period for hosting/web-server logs will be
+          determined from the server configuration before public launch.
+        </p>
+
+        <h2>4. Security / rate limiting</h2>
+        <p>
+          To reduce abuse, the application uses
+          <code>express-rate-limit</code> on <code>/api/*</code>.
+        </p>
+        <ul>
+          <li>Identifier: client IP (<code>request.ip</code>, with IPv6 normalization)</li>
+          <li>Window: 60 seconds</li>
+          <li>Limit: 240 requests per window</li>
+          <li>Store: default MemoryStore (in-memory only; not persisted to disk/DB by the app)</li>
+        </ul>
+        <p>
+          Possible legal basis (template for review): Art. 6(1)(f) GDPR
+          (legitimate interests in secure operation, abuse prevention, availability
+          and troubleshooting).
+        </p>
+
+        <h2>5. Local storage / preferences</h2>
+        <p>
+          The application does not set its own cookies and does not use sessionStorage.
+          Permanent convenience preferences are stored only when the user explicitly
+          enables “Remember settings on this device” /
+          “Einstellungen auf diesem Gerät speichern” (default: off).
+        </p>
+        <p>
+          After explicit activation, the following localStorage keys may be set:
+        </p>
+        <ul>
+          <li><code>wardogs-storage-consent</code> — records only that persistence was explicitly requested (<code>granted-v1</code>)</li>
+          <li><code>wardogs-language</code> — selected UI language (DE/EN)</li>
+          <li><code>wardogs-viewer-settings-v1</code> — JSON with filters/settings (including My Level, regions, map, level filter, level cap, sort, occupancy)</li>
+        </ul>
+        <p>
+          Saved preferences remain in the user’s browser.
+          Third parties do not receive those values through tracking mechanisms of this application.
+          Disabling the preference immediately removes the listed application keys.
+          Active filter settings remain usable in the current session until reload.
+        </p>
+        <p>
+          Without activation the application works fully with session/runtime state;
+          after reload, defaults / browser language apply again.
+          No cookie banner is shipped (no application cookies, no tracking).
+        </p>
+
+        <h2>6. WARDOGS server data / backend API</h2>
+        <p>
+          The browser communicates only with our backend at
+          <code>/api/...</code>. The backend calls the Wardog Servers API at
+          <code>https://api.wardogservers.com</code> server-side.
+          There is no direct browser call to that upstream API.
+        </p>
+        <p>
+          Live server lists, region data, server details and map history are
+          retrieved to provide the viewer. Responses may be cached server-side.
+        </p>
+
+        <h2>7. External links</h2>
+        <p>
+          The site may link to external services (for example Wardog Servers).
+          Following such a link leaves this website; the external provider’s
+          privacy terms apply. External sites are not loaded invisibly in the
+          background.
+        </p>
+
+        <h2>8. No analytics / advertising / profiling</h2>
+        <p>
+          The application includes no analytics/tracking scripts, no advertising,
+          no social-media pixels and no third-party fonts.
+          Frontend assets (CSS/JS/images/logos) are self-hosted.
+        </p>
+
+        <h2>9. Retention</h2>
+        <ul>
+          <li>optional localStorage preferences: until disabled/deleted by the user</li>
+          <li>rate-limit counters: volatile in memory, window-based</li>
+          <li>upstream caches: short-lived in Node process memory</li>
+          <!-- TO VERIFY ON PLESK BEFORE PUBLIC RELEASE -->
+          <li>hosting/web-server logs: retention will be set from server configuration before public launch</li>
+        </ul>
+
+        <h2>10. Data-subject rights</h2>
+        <p>
+          Where the GDPR applies, rights may include access, rectification,
+          erasure, restriction, objection and data portability, subject to legal
+          conditions. Contact:
+          <a href="mailto:dev@lusor.eu">dev@lusor.eu</a>
+        </p>
+
+        <h2>11. Complaint to a supervisory authority</h2>
+        <p>
+          Data subjects may lodge a complaint with a data-protection supervisory
+          authority, in particular in their habitual residence or the place of the
+          alleged infringement.
+        </p>
+
+        <h2>12. Changes</h2>
+        <p>
+          This privacy notice may be updated when actual processing changes.
+          The version published on this page applies.
+        </p>
+      </article>
+    </main>
+
+    <footer class="footer">
+      <p class="footer-legal">
+        <a href="/legal.html" data-i18n="legalNotice">Legal Notice</a>
+        <span aria-hidden="true">·</span>
+        <a href="/privacy.html" data-i18n="privacy">Privacy</a>
+        <span aria-hidden="true">·</span>
+        <span data-i18n="support">Support</span>:
+        <a href="mailto:dev@lusor.eu">dev@lusor.eu</a>
+      </p>
+    </footer>
+  </div>
+
+  <script src="/i18n.js"></script>
+  <script src="/storage-lib.js"></script>
+  <script src="/legal-page.js"></script>
+</body>
+</html>
