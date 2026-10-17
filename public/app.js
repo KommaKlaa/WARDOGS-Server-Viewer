@@ -129,6 +129,9 @@
     updateApplyBtn: document.getElementById("updateApplyBtn"),
     updateLaterBtn: document.getElementById("updateLaterBtn"),
     updateReleaseLink: document.getElementById("updateReleaseLink"),
+    rankingPanel: document.getElementById("rankingPanel"),
+    rankingToggleBtn: document.getElementById("rankingToggleBtn"),
+    rankingBody: document.getElementById("rankingBody"),
     rankingWindow: document.getElementById("rankingWindow"),
     rankingType: document.getElementById("rankingType"),
     rankingRefreshBtn: document.getElementById("rankingRefreshBtn"),
@@ -173,6 +176,7 @@
     minFree: "",
     sortMode: "freshest",
     search: "",
+    rankingCollapsed: false,
   };
 
   function regionLabel(id) {
@@ -211,6 +215,10 @@
     renderUpdateBanner();
     if (lastLiveStats) renderLiveStats(lastLiveStats);
     if (rankingRows.length) renderRankingChart(rankingRows);
+    setRankingCollapsed(
+      Boolean(els.rankingPanel?.classList.contains("is-collapsed")),
+      { persist: false }
+    );
     if (refresh) refreshView();
   }
 
@@ -404,6 +412,9 @@
       minFree: els.minFree.value,
       sortMode: els.sortMode.value,
       search: els.search.value,
+      rankingCollapsed: Boolean(
+        els.rankingPanel?.classList.contains("is-collapsed")
+      ),
     };
   }
 
@@ -454,6 +465,21 @@
     els.infantryOnlyToggle.checked = els.rulesetFilter.value === "infantry-only";
   }
 
+  function setRankingCollapsed(collapsed, { persist = true } = {}) {
+    if (!els.rankingPanel || !els.rankingToggleBtn) return;
+    const isCollapsed = Boolean(collapsed);
+    els.rankingPanel.classList.toggle("is-collapsed", isCollapsed);
+    els.rankingToggleBtn.setAttribute(
+      "aria-expanded",
+      isCollapsed ? "false" : "true"
+    );
+    els.rankingToggleBtn.setAttribute(
+      "title",
+      isCollapsed ? t("rankingExpand") : t("rankingCollapse")
+    );
+    if (persist) saveSettings();
+  }
+
   function applySettings(settings) {
     els.myLevel.value = String(settings.myLevel ?? DEFAULT_MY_LEVEL);
     els.serverType.value = settings.serverType || "all";
@@ -480,6 +506,7 @@
       : [];
     draftRegions = [...selectedRegions];
     pendingMap = migrateMapFilterValue(settings.mapFilter || "") || "";
+    setRankingCollapsed(Boolean(settings.rankingCollapsed), { persist: false });
     syncCustomCapVisibility();
     updateRegionSummary();
   }
@@ -1731,6 +1758,12 @@
     }
     if (els.rankingRefreshBtn) {
       els.rankingRefreshBtn.addEventListener("click", () => loadRanking());
+    }
+    if (els.rankingToggleBtn) {
+      els.rankingToggleBtn.addEventListener("click", () => {
+        const collapsed = !els.rankingPanel?.classList.contains("is-collapsed");
+        setRankingCollapsed(collapsed);
+      });
     }
     if (els.langDe) {
       els.langDe.addEventListener("click", () => setLanguage("de"));

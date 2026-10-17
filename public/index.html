@@ -300,16 +300,27 @@
       </div>
     </section>
 
-    <section class="ranking-panel tactical-panel" aria-label="Server ranking">
+    <section id="rankingPanel" class="ranking-panel tactical-panel" aria-label="Server ranking">
       <div class="hud-corners" aria-hidden="true"></div>
       <div class="ranking-header">
-        <div class="ranking-title-block">
-          <h2 class="ranking-title" data-i18n="rankingTitle">Popular servers</h2>
-          <p class="ranking-subtitle" data-i18n="rankingSubtitle">
-            Average players × uptime — best for finding consistently full servers.
-          </p>
-        </div>
-        <div class="ranking-controls">
+        <button
+          type="button"
+          id="rankingToggleBtn"
+          class="ranking-toggle"
+          aria-expanded="true"
+          aria-controls="rankingBody"
+          data-i18n-aria="rankingToggleAria"
+          aria-label="Show or hide ranking"
+        >
+          <span class="ranking-caret" aria-hidden="true">▾</span>
+          <span class="ranking-title-block">
+            <span class="ranking-title" data-i18n="rankingTitle">Popular servers</span>
+            <span class="ranking-subtitle" data-i18n="rankingSubtitle">
+              Average players × uptime — best for finding consistently full servers.
+            </span>
+          </span>
+        </button>
+        <div class="ranking-controls" id="rankingControls">
           <label class="field ranking-field">
             <span data-i18n="rankingWindow">Window</span>
             <select id="rankingWindow">
@@ -331,8 +342,10 @@
           </button>
         </div>
       </div>
-      <div id="rankingChart" class="ranking-chart" aria-live="polite">
-        <div class="ranking-empty" data-i18n="rankingLoading">Loading ranking…</div>
+      <div id="rankingBody" class="ranking-body">
+        <div id="rankingChart" class="ranking-chart" aria-live="polite">
+          <div class="ranking-empty" data-i18n="rankingLoading">Loading ranking…</div>
+        </div>
       </div>
     </section>
 

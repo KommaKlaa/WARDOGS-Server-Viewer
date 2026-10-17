@@ -65,6 +65,9 @@
       rankingTitle: "Beliebteste Server",
       rankingSubtitle:
         "Durchschnitt Spieler × Uptime — gut für dauerhaft volle Server.",
+      rankingToggleAria: "Beliebteste Server ein- oder ausklappen",
+      rankingExpand: "Ausklappen",
+      rankingCollapse: "Einklappen",
       rankingWindow: "Zeitraum",
       rankingWindow24h: "Letzte 24 Stunden",
       rankingWindow7d: "Letzte 7 Tage",
@@ -260,6 +263,9 @@
       rankingTitle: "Popular servers",
       rankingSubtitle:
         "Average players × uptime — useful for finding consistently busy servers.",
+      rankingToggleAria: "Show or hide popular servers",
+      rankingExpand: "Expand",
+      rankingCollapse: "Collapse",
       rankingWindow: "Window",
       rankingWindow24h: "Last 24 hours",
       rankingWindow7d: "Last 7 days",

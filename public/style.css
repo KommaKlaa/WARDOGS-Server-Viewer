@@ -467,21 +467,75 @@ a {
   margin-bottom: 12px;
 }
 
+.ranking-toggle {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  text-align: left;
+  cursor: pointer;
+  padding: 0;
+  max-width: min(100%, 42rem);
+}
+
+.ranking-toggle:focus-visible {
+  outline: 2px solid var(--amber-hot);
+  outline-offset: 3px;
+}
+
+.ranking-caret {
+  display: inline-block;
+  margin-top: 2px;
+  color: var(--amber);
+  font-size: 0.9rem;
+  transition: transform 0.15s ease;
+}
+
+.ranking-panel.is-collapsed .ranking-caret {
+  transform: rotate(-90deg);
+}
+
+.ranking-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
 .ranking-title {
   margin: 0;
   font-size: 0.95rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--amber);
+  font-weight: 700;
 }
 
 .ranking-subtitle {
-  margin: 4px 0 0;
+  margin: 0;
   color: var(--muted);
   font-size: 0.78rem;
   max-width: 42rem;
   text-transform: none;
   letter-spacing: normal;
+  font-weight: 400;
+}
+
+.ranking-body {
+  display: block;
+}
+
+.ranking-panel.is-collapsed .ranking-body,
+.ranking-panel.is-collapsed .ranking-controls {
+  display: none;
+}
+
+.ranking-panel.is-collapsed .ranking-header {
+  margin-bottom: 0;
+  align-items: center;
 }
 
 .ranking-controls {
