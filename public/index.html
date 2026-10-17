@@ -300,6 +300,42 @@
       </div>
     </section>
 
+    <section class="ranking-panel tactical-panel" aria-label="Server ranking">
+      <div class="hud-corners" aria-hidden="true"></div>
+      <div class="ranking-header">
+        <div class="ranking-title-block">
+          <h2 class="ranking-title" data-i18n="rankingTitle">Popular servers</h2>
+          <p class="ranking-subtitle" data-i18n="rankingSubtitle">
+            Average players × uptime — best for finding consistently full servers.
+          </p>
+        </div>
+        <div class="ranking-controls">
+          <label class="field ranking-field">
+            <span data-i18n="rankingWindow">Window</span>
+            <select id="rankingWindow">
+              <option value="24h" data-i18n="rankingWindow24h">Last 24 hours</option>
+              <option value="7d" selected data-i18n="rankingWindow7d">Last 7 days</option>
+              <option value="30d" data-i18n="rankingWindow30d">Last 30 days</option>
+            </select>
+          </label>
+          <label class="field ranking-field">
+            <span data-i18n="rankingType">Type</span>
+            <select id="rankingType">
+              <option value="all" data-i18n="allServers">All servers</option>
+              <option value="community" selected data-i18n="community">Community</option>
+              <option value="official" data-i18n="official">Official</option>
+            </select>
+          </label>
+          <button type="button" id="rankingRefreshBtn" class="btn-secondary" data-i18n="rankingRefresh">
+            Refresh ranking
+          </button>
+        </div>
+      </div>
+      <div id="rankingChart" class="ranking-chart" aria-live="polite">
+        <div class="ranking-empty" data-i18n="rankingLoading">Loading ranking…</div>
+      </div>
+    </section>
+
     <section class="table-wrap tactical-panel">
       <div class="hud-corners" aria-hidden="true"></div>
       <table class="server-table">

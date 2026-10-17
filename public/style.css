@@ -452,6 +452,138 @@ a {
   border-width: 0 1px 1px 0;
 }
 
+.ranking-panel {
+  padding: 14px;
+  margin-bottom: 14px;
+  background: rgba(8, 11, 12, 0.82);
+}
+
+.ranking-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.ranking-title {
+  margin: 0;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.ranking-subtitle {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  max-width: 42rem;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.ranking-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.ranking-field {
+  min-width: 140px;
+}
+
+.ranking-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ranking-empty {
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding: 8px 0;
+}
+
+.ranking-row {
+  display: grid;
+  grid-template-columns: 2.2rem minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.ranking-rank {
+  font-family: var(--mono);
+  color: var(--amber);
+  font-size: 0.8rem;
+}
+
+.ranking-main {
+  min-width: 0;
+}
+
+.ranking-name {
+  font-size: 0.86rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ranking-meta {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-family: var(--mono);
+}
+
+.ranking-bar-track {
+  margin-top: 5px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(196, 163, 90, 0.18);
+  overflow: hidden;
+}
+
+.ranking-bar-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, rgba(196, 163, 90, 0.45), rgba(224, 184, 77, 0.9));
+  transition: width 0.35s ease;
+}
+
+.ranking-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.ranking-score {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--amber-hot);
+}
+
+.ranking-copy {
+  margin: 0;
+  padding: 5px 8px;
+  font-size: 0.72rem;
+}
+
+@media (max-width: 720px) {
+  .ranking-row {
+    grid-template-columns: 2rem minmax(0, 1fr);
+  }
+  .ranking-actions {
+    grid-column: 2;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
 .controls {
   padding: 14px;
   overflow: visible;

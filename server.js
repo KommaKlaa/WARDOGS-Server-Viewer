@@ -311,6 +311,31 @@ app.get("/api/live-stats", async (_req, res) => {
   }
 });
 
+app.get("/api/ranking", async (req, res) => {
+  try {
+    const window = String(req.query.window || "24h");
+    const type = String(req.query.type || "all");
+    const limit = Number(req.query.limit) || 15;
+    const result = await cache.getServerRanking({ window, type, limit });
+    const body = result.body || {};
+    res.json({
+      data: Array.isArray(body.data) ? body.data : [],
+      history: body.history || null,
+      meta: body.meta || null,
+      warning: result.stale ? "upstream_unavailable_using_cache" : null,
+      source: result.cached ? "cache" : "live",
+    });
+  } catch (err) {
+    sendError(
+      res,
+      err.status || 503,
+      err.code || "upstream_error",
+      err.message || "Failed to load ranking",
+      err
+    );
+  }
+});
+
 app.get("/api/health", (_req, res) => {
   const stats = cache.getStats();
   const payload = {

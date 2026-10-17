@@ -129,6 +129,10 @@
     updateApplyBtn: document.getElementById("updateApplyBtn"),
     updateLaterBtn: document.getElementById("updateLaterBtn"),
     updateReleaseLink: document.getElementById("updateReleaseLink"),
+    rankingWindow: document.getElementById("rankingWindow"),
+    rankingType: document.getElementById("rankingType"),
+    rankingRefreshBtn: document.getElementById("rankingRefreshBtn"),
+    rankingChart: document.getElementById("rankingChart"),
   };
 
   /** @type {any} */
@@ -206,6 +210,7 @@
     if (!els.regionPanel.classList.contains("hidden")) renderRegionPanel();
     renderUpdateBanner();
     if (lastLiveStats) renderLiveStats(lastLiveStats);
+    if (rankingRows.length) renderRankingChart(rankingRows);
     if (refresh) refreshView();
   }
 
@@ -302,6 +307,29 @@
       const key = sortMap[opt.value];
       if (key) opt.textContent = t(key);
     });
+
+    const rankingWindowMap = {
+      "24h": "rankingWindow24h",
+      "7d": "rankingWindow7d",
+      "30d": "rankingWindow30d",
+    };
+    if (els.rankingWindow) {
+      [...els.rankingWindow.options].forEach((opt) => {
+        const key = rankingWindowMap[opt.value];
+        if (key) opt.textContent = t(key);
+      });
+    }
+    if (els.rankingType) {
+      const rankingTypeMap = {
+        all: "allServers",
+        official: "official",
+        community: "community",
+      };
+      [...els.rankingType.options].forEach((opt) => {
+        const key = rankingTypeMap[opt.value];
+        if (key) opt.textContent = t(key);
+      });
+    }
   }
 
   function migrateSettings(raw) {
@@ -1190,6 +1218,86 @@
     }
   }
 
+  /** @type {any[]} */
+  let rankingRows = [];
+
+  function renderRankingChart(rows) {
+    if (!els.rankingChart) return;
+    rankingRows = Array.isArray(rows) ? rows : [];
+    if (!rankingRows.length) {
+      els.rankingChart.innerHTML = `<div class="ranking-empty">${escapeHtml(t("rankingEmpty"))}</div>`;
+      return;
+    }
+
+    const maxScore = Math.max(
+      ...rankingRows.map((r) => Number(r.score) || 0),
+      1
+    );
+
+    els.rankingChart.innerHTML = rankingRows
+      .map((row) => {
+        const score = Number(row.score) || 0;
+        const players = Number(row.players) || 0;
+        const peak = Number(row.peak) || 0;
+        const uptimePct = Math.round((Number(row.uptime) || 0) * 100);
+        const width = Math.max(4, Math.round((score / maxScore) * 100));
+        const name = row.name || row.serverId || t("unnamed");
+        const join = row.serverId || "";
+        const region = regionLabel(row.region || "—");
+        const typeLabel =
+          row.type === "official"
+            ? t("official")
+            : row.type === "community"
+              ? t("community")
+              : row.type || "—";
+        return `<div class="ranking-row" data-join="${escapeHtml(join)}">
+          <div class="ranking-rank">#${escapeHtml(String(row.rank || ""))}</div>
+          <div class="ranking-main">
+            <div class="ranking-name" title="${escapeHtml(name)}">${escapeHtml(name)}</div>
+            <div class="ranking-meta">${escapeHtml(region)} · ${escapeHtml(typeLabel)} · ${escapeHtml(
+              t("rankingPlayersAvg", { players: players.toFixed(1) })
+            )} · ${escapeHtml(t("rankingPeak", { peak }))} · ${escapeHtml(
+              t("rankingUptime", { pct: uptimePct })
+            )}</div>
+            <div class="ranking-bar-track" aria-hidden="true">
+              <div class="ranking-bar-fill" style="width:${width}%"></div>
+            </div>
+          </div>
+          <div class="ranking-actions">
+            <div class="ranking-score">${escapeHtml(
+              t("rankingScore", { score: score.toFixed(1) })
+            )}</div>
+            <button type="button" class="btn-secondary ranking-copy copy-btn" data-join="${escapeHtml(
+              join
+            )}" ${join ? "" : "disabled"}>
+              ${join ? escapeHtml(t("copyJoinCode")) : "N/A"}
+            </button>
+          </div>
+        </div>`;
+      })
+      .join("");
+  }
+
+  async function loadRanking() {
+    if (!els.rankingChart) return;
+    els.rankingChart.innerHTML = `<div class="ranking-empty">${escapeHtml(t("rankingLoading"))}</div>`;
+    if (els.rankingRefreshBtn) els.rankingRefreshBtn.disabled = true;
+    try {
+      const window = els.rankingWindow?.value || "7d";
+      const type = els.rankingType?.value || "community";
+      const res = await fetch(
+        `/api/ranking?window=${encodeURIComponent(window)}&type=${encodeURIComponent(type)}&limit=15`
+      );
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      renderRankingChart(Array.isArray(json.data) ? json.data : []);
+    } catch {
+      els.rankingChart.innerHTML = `<div class="ranking-empty">${escapeHtml(t("rankingError"))}</div>`;
+    } finally {
+      if (els.rankingRefreshBtn) els.rankingRefreshBtn.disabled = false;
+    }
+  }
+
   function updateStaleBanner(meta, warning) {
     const rateLimited =
       warning === "rate_limited_using_cache" || Boolean(meta?.stale && warning);
@@ -1612,6 +1720,18 @@
 
     els.refreshBtn.addEventListener("click", () => loadServers());
     els.serverBody.addEventListener("click", onCopyClick);
+    if (els.rankingChart) {
+      els.rankingChart.addEventListener("click", onCopyClick);
+    }
+    if (els.rankingWindow) {
+      els.rankingWindow.addEventListener("change", () => loadRanking());
+    }
+    if (els.rankingType) {
+      els.rankingType.addEventListener("change", () => loadRanking());
+    }
+    if (els.rankingRefreshBtn) {
+      els.rankingRefreshBtn.addEventListener("click", () => loadRanking());
+    }
     if (els.langDe) {
       els.langDe.addEventListener("click", () => setLanguage("de"));
     }
@@ -1709,6 +1829,7 @@
   startAgeClock();
   loadVersionInfo().then(() => checkForAppUpdate({ silent: true }));
   loadServers();
+  loadRanking();
 
   window.__wardogsViewer.getLanguage = () => currentLang;
   window.__wardogsViewer.setLanguage = (lang) => setLanguage(lang);

@@ -96,6 +96,52 @@ describe("shared upstream cache", () => {
     assert.ok(body.data);
   });
 
+  it("caches server ranking from /v1/history/servers/ranking", async () => {
+    let rankingCalls = 0;
+    const rankingCache = createUpstreamCache({
+      now: () => clock,
+      fetchImpl: async (url) => {
+        if (String(url).includes("/v1/history/servers/ranking")) {
+          rankingCalls += 1;
+          return mockResponse(
+            200,
+            {
+              data: [
+                {
+                  rank: 1,
+                  serverId: "abc",
+                  name: "Test",
+                  score: 90,
+                  players: 88,
+                  peak: 100,
+                  uptime: 1,
+                },
+              ],
+              history: { window: "24h" },
+              meta: { refreshSeconds: 180 },
+            },
+            { etag: '"rank-1"' }
+          );
+        }
+        return mockResponse(200, { data: [], meta: { refreshSeconds: 60 } });
+      },
+    });
+    const first = await rankingCache.getServerRanking({
+      window: "24h",
+      type: "community",
+      limit: 10,
+    });
+    assert.equal(rankingCalls, 1);
+    assert.equal(first.body.data[0].score, 90);
+    const second = await rankingCache.getServerRanking({
+      window: "24h",
+      type: "community",
+      limit: 10,
+    });
+    assert.equal(rankingCalls, 1);
+    assert.equal(second.cached, true);
+  });
+
   it("caches live network stats from /v1/stats", async () => {
     let statsCalls = 0;
     const statsCache = createUpstreamCache({
