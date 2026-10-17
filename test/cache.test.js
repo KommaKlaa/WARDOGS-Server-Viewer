@@ -95,4 +95,36 @@ describe("shared upstream cache", () => {
     assert.equal(calls, before + 1);
     assert.ok(body.data);
   });
+
+  it("caches live network stats from /v1/stats", async () => {
+    let statsCalls = 0;
+    const statsCache = createUpstreamCache({
+      now: () => clock,
+      fetchImpl: async (url) => {
+        if (String(url).includes("/v1/stats")) {
+          statsCalls += 1;
+          return mockResponse(
+            200,
+            {
+              data: {
+                serverCount: 10,
+                playerCount: 100,
+                officialServerCount: 4,
+                communityServerCount: 6,
+              },
+              meta: { refreshSeconds: 60, stale: false },
+            },
+            { etag: '"stats-1"' }
+          );
+        }
+        return mockResponse(200, { data: [], meta: { refreshSeconds: 60 } });
+      },
+    });
+    const first = await statsCache.getLiveStats();
+    assert.equal(statsCalls, 1);
+    assert.equal(first.data.playerCount, 100);
+    const second = await statsCache.getLiveStats();
+    assert.equal(statsCalls, 1);
+    assert.equal(second._cache, true);
+  });
 });

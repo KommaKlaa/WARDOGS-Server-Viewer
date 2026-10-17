@@ -88,10 +88,13 @@
     apiStatus: document.getElementById("apiStatus"),
     lastRefresh: document.getElementById("lastRefresh"),
     visibleCount: document.getElementById("visibleCount"),
+    networkPlayers: document.getElementById("networkPlayers"),
+    networkServers: document.getElementById("networkServers"),
     staleBanner: document.getElementById("staleBanner"),
     search: document.getElementById("search"),
     mapFilter: document.getElementById("mapFilter"),
     serverType: document.getElementById("serverType"),
+    passwordFilter: document.getElementById("passwordFilter"),
     rulesetFilter: document.getElementById("rulesetFilter"),
     infantryOnlyToggle: document.getElementById("infantryOnlyToggle"),
     myLevel: document.getElementById("myLevel"),
@@ -155,6 +158,7 @@
     selectedRegions: [],
     mapFilter: "",
     serverType: "all",
+    passwordFilter: "all",
     rulesetFilter: "all",
     hideFull: false,
     hideEmpty: false,
@@ -201,6 +205,7 @@
     updateRegionSummary();
     if (!els.regionPanel.classList.contains("hidden")) renderRegionPanel();
     renderUpdateBanner();
+    if (lastLiveStats) renderLiveStats(lastLiveStats);
     if (refresh) refreshView();
   }
 
@@ -217,6 +222,18 @@
       const key = typeMap[opt.value];
       if (key) opt.textContent = t(key);
     });
+
+    const passwordMap = {
+      all: "passwordFilterAll",
+      open: "passwordFilterOpen",
+      locked: "passwordFilterLocked",
+    };
+    if (els.passwordFilter) {
+      [...els.passwordFilter.options].forEach((opt) => {
+        const key = passwordMap[opt.value];
+        if (key) opt.textContent = t(key);
+      });
+    }
 
     const rulesetMap = {
       all: "rulesetAll",
@@ -345,6 +362,7 @@
       selectedRegions: [...selectedRegions],
       mapFilter: els.mapFilter.value,
       serverType: els.serverType.value,
+      passwordFilter: els.passwordFilter?.value || "all",
       rulesetFilter: els.rulesetFilter?.value || "all",
       hideFull: els.hideFull.checked,
       hideEmpty: els.hideEmpty.checked,
@@ -411,6 +429,9 @@
   function applySettings(settings) {
     els.myLevel.value = String(settings.myLevel ?? DEFAULT_MY_LEVEL);
     els.serverType.value = settings.serverType || "all";
+    if (els.passwordFilter) {
+      els.passwordFilter.value = settings.passwordFilter || "all";
+    }
     if (els.rulesetFilter) {
       els.rulesetFilter.value = settings.rulesetFilter || "all";
     }
@@ -748,6 +769,7 @@
     const q = els.search.value.trim().toLowerCase();
     const map = els.mapFilter.value;
     const type = els.serverType.value;
+    const passwordMode = els.passwordFilter?.value || "all";
     const ruleset = els.rulesetFilter?.value || "all";
     const hideFull = els.hideFull.checked;
     const hideEmpty = els.hideEmpty.checked;
@@ -758,6 +780,8 @@
     return servers.filter((s) => {
       if (regionSet && !regionSet.has(s.region)) return false;
       if (type !== "all" && s.type !== type) return false;
+      if (passwordMode === "open" && s.passwordProtected) return false;
+      if (passwordMode === "locked" && !s.passwordProtected) return false;
       if (ruleset !== "all" && primaryRuleset(s) !== ruleset) return false;
       if (map && mapId(s) !== map) return false;
 
@@ -1130,6 +1154,42 @@
     return visible;
   }
 
+  /** @type {any|null} */
+  let lastLiveStats = null;
+
+  function formatCount(n) {
+    const locale = currentLang === "de" ? "de-DE" : "en-GB";
+    return Number(n || 0).toLocaleString(locale);
+  }
+
+  function renderLiveStats(data) {
+    if (!els.networkPlayers || !els.networkServers) return;
+    if (!data) {
+      els.networkPlayers.textContent = "—";
+      els.networkServers.textContent = "—";
+      els.networkServers.removeAttribute("title");
+      return;
+    }
+    lastLiveStats = data;
+    els.networkPlayers.textContent = formatCount(data.playerCount);
+    els.networkServers.textContent = formatCount(data.serverCount);
+    els.networkServers.title = t("networkServersBreakdown", {
+      official: formatCount(data.officialServerCount),
+      community: formatCount(data.communityServerCount),
+    });
+  }
+
+  async function loadLiveStats() {
+    try {
+      const res = await fetch("/api/live-stats");
+      if (!res.ok) return;
+      const json = await res.json();
+      if (json.data) renderLiveStats(json.data);
+    } catch {
+      // Non-fatal: list still works without totals.
+    }
+  }
+
   function updateStaleBanner(meta, warning) {
     const rateLimited =
       warning === "rate_limited_using_cache" || Boolean(meta?.stale && warning);
@@ -1219,6 +1279,7 @@
 
     try {
       const regionsPromise = loadRegions();
+      const liveStatsPromise = loadLiveStats();
       // Backend shared cache + refreshSeconds gate upstream; manual refresh cannot bypass.
       const listUrl = "/api/servers";
 
@@ -1251,7 +1312,7 @@
         currentLang === "de" ? "de-DE" : "en-GB"
       );
 
-      await regionsPromise;
+      await Promise.all([regionsPromise, liveStatsPromise]);
       if (!availableRegionIds.length) {
         availableRegionIds = uniqueIds(allServers.map((s) => s.region)).sort();
         updateRegionSummary();
@@ -1498,6 +1559,7 @@
       els.search,
       els.mapFilter,
       els.serverType,
+      els.passwordFilter,
       els.rulesetFilter,
       els.myLevel,
       els.levelFilter,

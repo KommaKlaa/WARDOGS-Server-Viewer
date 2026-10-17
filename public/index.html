@@ -75,6 +75,14 @@
             <span class="label" data-i18n="visibleServers">Visible Servers</span>
             <span id="visibleCount">0</span>
           </div>
+          <div class="status-row">
+            <span class="label" data-i18n="networkPlayers">Players online</span>
+            <span id="networkPlayers">—</span>
+          </div>
+          <div class="status-row">
+            <span class="label" data-i18n="networkServers">Servers online</span>
+            <span id="networkServers" title="">—</span>
+          </div>
           <div id="staleBanner" class="stale-banner hidden" data-i18n="apiDataStale">DATA STALE</div>
         </div>
       </div>
@@ -184,6 +192,15 @@
             <option value="all" data-i18n="allServers">All Servers</option>
             <option value="official" data-i18n="official">Official</option>
             <option value="community" data-i18n="community">Community</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span data-i18n="passwordFilter">Password</span>
+          <select id="passwordFilter">
+            <option value="all" data-i18n="passwordFilterAll">All servers</option>
+            <option value="open" data-i18n="passwordFilterOpen">Open only</option>
+            <option value="locked" data-i18n="passwordFilterLocked">Password only</option>
           </select>
         </label>
 

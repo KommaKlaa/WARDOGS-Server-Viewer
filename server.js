@@ -291,6 +291,26 @@ app.get("/api/regions", async (_req, res) => {
   }
 });
 
+app.get("/api/live-stats", async (_req, res) => {
+  try {
+    const data = await cache.getLiveStats();
+    res.json({
+      data: data.data || null,
+      meta: data.meta || null,
+      warning: data._warning || null,
+      source: data._cache ? "cache" : "live",
+    });
+  } catch (err) {
+    sendError(
+      res,
+      err.status || 503,
+      err.code || "upstream_error",
+      err.message || "Failed to load live stats",
+      err
+    );
+  }
+});
+
 app.get("/api/health", (_req, res) => {
   const stats = cache.getStats();
   const payload = {

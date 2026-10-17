@@ -1,6 +1,6 @@
 {
   "name": "wardogs-viewer",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Local WARDOGS server viewer — bilingual community browser",
   "private": true,
   "main": "server.js",
